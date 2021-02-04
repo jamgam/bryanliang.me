@@ -1,0 +1,39 @@
+{
+  "name": "bryanliang.me",
+  "description": "my personal webstire",
+  "version": "1.0.0",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "start-dev": "nodemon server/server.js",
+    "build": "webpack --mode=production",
+    "build-dev": "webpack --mode=development --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamgam/bryanliang.me.git"
+  },
+  "author": "Bryan Liang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jamgam/bryanliang.me/issues"
+  },
+  "engine": {
+    "node": "14.15.1"
+  },
+  "homepage": "https://github.com/jamgam/bryanliang.me#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.13",
+    "@babel/preset-env": "^7.12.13",
+    "@babel/preset-react": "^7.12.13",
+    "babel-loader": "^8.2.2",
+    "nodemon": "^2.0.7",
+    "webpack": "^5.20.1",
+    "webpack-cli": "^4.5.0"
+  }
+}
