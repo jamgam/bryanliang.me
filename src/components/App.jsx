@@ -49,11 +49,8 @@ const TextContainer = styled.div`
   padding-left: 10rem;
 `
 
-const AnimationContainer = styled.div.attrs((props) => ({
-  style: {
-    transform: `translateX(${props.position}em)`
-  }
-}))`
+const AnimationContainer = styled.div`
+  transform: translateX(${props => props.position}em); 
   transition: all ease ${props => props.speed || 1}s;
 `
 
