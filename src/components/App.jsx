@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { colors } from '/src/constants'
 import Text from '/src/components/Text'
@@ -6,16 +6,32 @@ import NavBar from '/src/components/NavBar'
 
 const App = () => {
 
+  const [pos, setPos] = useState(-50)
+
+  useEffect(() => {
+    setPos(0)
+  }, [])
+
   return (
     <Container>
       <NavBar />
       <TextContainer>
-        <Text>Hello,</Text>
-        <Text>I'm Bryan</Text>
-        <Bar />
-        <Bar marginLeft={3} />
-        <Text font={1.5}>Software Engineer</Text>
-        <Text color={colors.red} font={1.3}>Gamer</Text>
+        <AnimationContainer speed={.8} position={pos}>
+          <Text>Hello,</Text>
+        </AnimationContainer>
+        <AnimationContainer speed={.95} position={pos}>
+          <Text>I'm Bryan</Text>
+        </AnimationContainer>
+        <AnimationContainer speed={1.1} position={pos}>
+          <Bar />
+        </AnimationContainer>
+        <AnimationContainer speed={1.2} position={pos}>
+          <Bar marginLeft={3} />
+        </AnimationContainer>
+        <AnimationContainer speed={1.3} position={pos}>
+          <Text font={1.5}>Software Engineer</Text>
+          <Text color={colors.red} font={1.3}>Gamer</Text>
+        </AnimationContainer>
       </TextContainer>
     </Container>
   )
@@ -31,6 +47,14 @@ const Container = styled.div`
 const TextContainer = styled.div`
   padding-top: 15rem;
   padding-left: 10rem;
+`
+
+const AnimationContainer = styled.div.attrs((props) => ({
+  style: {
+    transform: `translateX(${props.position}em)`
+  }
+}))`
+  transition: all ease ${props => props.speed || 1}s;
 `
 
 const Bar = styled.div`
