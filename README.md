@@ -1,2 +1,4 @@
 # bryanliang.me
-my personal webstire
+my personal website
+
+check it out here https://bryanliang.me
