@@ -67,13 +67,18 @@ const App = () => {
   )
 
   return (
-    <>
+    <AppContainer>
       {isPlayingGame || renderNavbar()}
       {isPlayingGame || renderText()}
       {!isPlayingGame || <GameCanvas isPlayingGame={isPlayingGame} />}
-    </>
+    </AppContainer>
   )
 }
+
+const AppContainer = styled.div`
+  background-color: ${colors.darkGrey};
+  height: 100%;
+`
 
 const GameButton = styled.button`
   display: inline-block;
@@ -95,9 +100,11 @@ const TextContainer = styled.div`
   z-index: 10;
   padding-top: 15rem;
   padding-left: 10rem;
+  background-color: rgba(0, 0, 0, 0);
 `
 
 const AnimationContainerX = styled.div`
+  background-color: rgba(0, 0, 0, 0);
   transform: translateX(${props => props.position}em); 
   transition: all ease ${props => props.speed || 1}s;
 `

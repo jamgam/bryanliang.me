@@ -2,17 +2,10 @@ import Player from '/src/canvas/Player'
 import Bullet from '/src/canvas/Bullet'
 import { colors } from '/src/constants'
 
-const CONSTANTS = {
-  DISTANCE_FROM_CURSOR: 25,
-  MAX_SPEED_COEFFICIENT: 1/35,
-  MAX_SPEED_CONSTANT: 5,
-}
-
 class Game {
   constructor({ width, height, context }) {
     window.addEventListener('mousemove',  this.handleMouseMove.bind(this))
     window.addEventListener('mousedown', this.handleMouseDown.bind(this))
-    console.log(context)
     this.isInGame = false
     this.width = width
     this.height = height
@@ -40,7 +33,8 @@ class Game {
   }
 
   handleMouseDown() {
-    
+    const { context, player, width, height } = this
+    this.bullets.push(new Bullet({player, width, height}))
   }
 
   update() {
@@ -53,21 +47,26 @@ class Game {
   }
 
   render() {
-    const { width, height, context } = this
+    const { width, height, context, bullets, player, mousePosition } = this
     
     context.save()
 
     // fill background
-    // context.fillStyle = colors.darkGrey
-    context.fillStyle = 'black'
+    context.fillStyle = colors.darkGrey
     context.fillRect(0, 0, width, height)
 
     // render player
-    this.player.render(this.mousePosition)
+    player.render(mousePosition)
+
+    // remove deleted bullets
+    const updatedBullets = bullets.filter((bullet) => !bullet.delete)
+
+    // render bullets
+    for (let bullet of updatedBullets) {
+      bullet.render()
+    }
 
     context.restore()
-
-    console.log('frame rendered')
   }
 }
 
