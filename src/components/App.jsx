@@ -3,13 +3,13 @@ import styled from 'styled-components'
 import { colors } from '/src/constants'
 import Text from '/src/components/Text'
 import NavBar from '/src/components/NavBar'
-import Game from '/src/components/Game'
+import GameCanvas from '/src/components/GameCanvas'
 
 const App = () => {
 
   const [pos, setPos] = useState(-60)
   // TODO: default isPlayingGame back to false
-  const [isPlayingGame, setIsPlayingGame] = useState(false)
+  const [isPlayingGame, setIsPlayingGame] = useState(true)
   const [count, setCount] = useState(0)
   const [canvasContext, setCanvasContext] = useState(null)
 
@@ -54,7 +54,7 @@ const App = () => {
           <GameButton 
             onClick={handleButtonClick}
           >
-            <Text color={'white'} font={1}>I wanna shoot some stuff!</Text>
+            <Text color={'white'} font={1}>I wanna shoot some stuff! (WIP)</Text>
           </GameButton>
         </AnimationContainerX>
       </TextContainer>
@@ -70,7 +70,7 @@ const App = () => {
     <>
       {isPlayingGame || renderNavbar()}
       {isPlayingGame || renderText()}
-      {!isPlayingGame || <Game isPlayingGame={isPlayingGame} />}
+      {!isPlayingGame || <GameCanvas isPlayingGame={isPlayingGame} />}
     </>
   )
 }
