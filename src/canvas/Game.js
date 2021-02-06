@@ -131,7 +131,7 @@ class Game {
         }
       }
       const dist = calculateDistance(player.pos, enemy.pos) 
-      if (dist < enemy.size + 8) {
+      if (dist < enemy.size + 6) {
         // TODO: LOSE
         this.endGame()
         return false
