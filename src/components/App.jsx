@@ -20,7 +20,6 @@ const App = () => {
     // setIsPlayingGame(true)
     setPos(-50)
     setMousePos({x: e.clientX, y: e.clientY})
-    console.warn(e)
   }, [])
 
   useEffect(() => {
