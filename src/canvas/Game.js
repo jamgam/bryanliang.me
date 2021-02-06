@@ -120,20 +120,14 @@ class Game {
     }
   }
 
-  createExplosion({size, pos}) {
+  createExplosion({size, pos, speed, angle}) {
     for (let i = 0; i < size; i++) {
       const particle = new Particle({
-        lifeSpan: randomNum(1000, 1666),
-        size: randomNum(1, 3),
-        position: {
-          x: pos.x + randomNum(-size*1.2, size*1.2),
-          y: pos.y + randomNum(-size*1.2, size*1.2)
-        },
-        velocity: {
-          x: randomNum(-0.09, 0.09),
-          y: randomNum(-0.09, 0.09)
-        },
-        context: this.context
+        pos,
+        context: this.context,
+        speed,
+        angle,
+        size,
       })
       this.particles.push(particle)
     }

@@ -24,6 +24,12 @@ export const calculateDistance = (point1, point2) => {
   return Math.sqrt((point2.x - point1.x) ** 2 + (point2.y - point1.y) ** 2)
 }
 
+export const calculateVelocityFromAngle = (speed, angle) => {
+  const y = Math.sin(angle)* speed
+  const x = Math.cos(angle)* speed
+  return {x, y}
+}
+
 export const isOutOfBounds = (point, width, height, offset=0) => {
   return point.x < width + offset && point.y < height + offset && point.x > -(offset) && point.y > -(offset)
 }
