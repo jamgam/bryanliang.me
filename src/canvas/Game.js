@@ -65,17 +65,9 @@ class Game {
   endGame() {
 
     const { ENEMY_SPAWN_RATE } = GAME_VALUES
-
     this.handleGameEnd()
-
     this.isInGame = false
-    this.bullets = []
-    this.lastEnemySpawned = Date.now()
-    this.enemies = []
-    this.spawnRate = ENEMY_SPAWN_RATE
-    this.isShooting = false
-    this.lastShot = 0
-    this.lastFrame = null
+
   }
 
   generateNewEnemies() {
@@ -169,9 +161,6 @@ class Game {
   }
 
   render() {
-    if (!this.isInGame) {
-      return
-    }
     const { 
       width, 
       height, 
