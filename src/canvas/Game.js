@@ -12,7 +12,8 @@ class Game {
     context, 
     mousePos, 
     handleGameEnd, 
-    setScore 
+    setScore,
+    setFps,
   }) {
     const { ENEMY_SPAWN_RATE } = GAME_VALUES
     window.addEventListener('mousemove',  this.handleMouseMove.bind(this))
@@ -20,6 +21,7 @@ class Game {
     window.addEventListener('mouseup', this.handleMouseUp.bind(this))
     this.handleGameEnd = handleGameEnd
     this.setScore = setScore
+    this.setFps = setFps
     this.isInGame = false
     this.width = width
     this.height = height
@@ -34,6 +36,7 @@ class Game {
     this.lastShot = 0
     this.lastFrame = null
     this.score = 0
+    this.framesRendered = 0
   }
 
   resize({ width, height }) {
@@ -157,6 +160,7 @@ class Game {
     this.generateNewEnemies()
     this.render()
     this.lastFrame = Date.now()
+    this.framesRendered++
     requestAnimationFrame(() => {this.update()})
   }
 
@@ -173,7 +177,9 @@ class Game {
     } = this
     
     const timeElasped = Date.now() - lastFrame
-
+    if (this.framesRendered % 15 === 0) {
+      this.setFps(1000/timeElasped)
+    }
     context.save()
 
     // fill background
@@ -194,6 +200,7 @@ class Game {
     }
 
     context.restore()
+    this.framesRendered++
   }
 }
 

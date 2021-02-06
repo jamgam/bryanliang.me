@@ -18,6 +18,7 @@ const GameCanvas = (props) => {
   const [game, setGame] = useState(null)
   const [isInGame, setIsInGame] = useState(true)
   const [score, setScore] = useState(0)
+  const [fps, setFps] = useState(0)
 
   const handleResize = useCallback(() => {
     setWindowSize({height: window.innerHeight, width: window.innerWidth})
@@ -35,7 +36,7 @@ const GameCanvas = (props) => {
 
     window.addEventListener('resize',  handleResize)
     
-    const context = canvasRef?.current?.getContext('2d')
+    const context = canvasRef?.current?.getContext('2d', { alpha: false })
     setCanvasContext(context)
     startGame(context)
   }, [])
@@ -51,6 +52,7 @@ const GameCanvas = (props) => {
       mousePos,
       handleGameEnd,
       setScore,
+      setFps,
       ...windowSize, 
     })
     newGame.start()
@@ -72,15 +74,25 @@ const GameCanvas = (props) => {
 
   const renderScoreCounter = () => (
     <Score>
-      <Text>
-        {`Score: ${score}`}
+      <Text font={1.5}>
+        {`Score: ${score} | `}
+      </Text>
+        <Text font={1.5}>
+        {`FPS: ${Math.floor(fps)}`}
       </Text>
     </Score>
+  )
+
+  const renderFrameRate = () => (
+    <Text>
+      {`FPS: ${fps}`}
+    </Text>
   )
 
   return (
     <> 
       {renderScoreCounter()}
+      {renderFrameRate()}
       {!isInGame && renderEndGamePrompt()}
       <Canvas 
         ref={canvasRef} 
