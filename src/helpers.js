@@ -16,6 +16,10 @@ export const randomInt = (min, max) => {
   return Math.floor(Math.random() * Math.floor(max - min)) + min
 }
 
+export const randomNum = (min, max) => {
+  return (Math.random() * (max - min)) + min
+}
+
 export const calculateDistance = (point1, point2) => {
   return Math.sqrt((point2.x - point1.x) ** 2 + (point2.y - point1.y) ** 2)
 }

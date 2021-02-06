@@ -1,8 +1,9 @@
 import Player from '/src/canvas/Player'
 import Bullet from '/src/canvas/Bullet'
 import Enemy from '/src/canvas/Enemy'
+import Particle from '/src/canvas/Particle'
 import { GAME_VALUES, colors } from '/src/constants'
-import { randomInt, calculateDistance } from '/src/helpers'
+import { randomInt, calculateDistance, randomNum } from '/src/helpers'
 
 // TODO: replace numbers with constants
 class Game {
@@ -39,6 +40,7 @@ class Game {
     this.framesRendered = 0
     this.speedModifier = 0
     this.speedIncremented = false
+    this.particles = []
   }
 
   resize({ width, height }) {
@@ -118,9 +120,28 @@ class Game {
     }
   }
 
+  createExplosion({size, pos}) {
+    for (let i = 0; i < size; i++) {
+      const particle = new Particle({
+        lifeSpan: randomNum(60, 100),
+        size: randomNum(1, 3),
+        position: {
+          x: pos.x + randomNum(-size*1.2, size*1.2),
+          y: pos.y + randomNum(-size*1.2, size*1.2)
+        },
+        velocity: {
+          x: randomNum(-1.5, 1.5),
+          y: randomNum(-1.5, 1.5)
+        },
+        context: this.context
+      })
+      this.particles.push(particle)
+    }
+  }
+
   checkCollisions() {
     let start = Date.now()
-    const { bullets, enemies, player } = this
+    const { bullets, enemies, particles, player } = this
     for(let enemy of enemies) {
       const dist = calculateDistance(player.pos, enemy.pos) 
       if (dist < enemy.size + 6) {
@@ -132,6 +153,7 @@ class Game {
         const dist = calculateDistance(bullet.pos, enemy.pos) 
         if (dist < enemy.size) {
           if (!bullet.delete && !enemy.delete) {
+            this.createExplosion(enemy)
             this.incrementScore()
           }
           bullet.destroy()
@@ -176,8 +198,9 @@ class Game {
       bullets, 
       player, 
       enemies, 
+      particles,
       mousePosition,
-      lastFrame
+      lastFrame,
     } = this
     
     const timeElasped = Date.now() - lastFrame
@@ -194,7 +217,8 @@ class Game {
     player.render(mousePosition, timeElasped)
   
     this.enemies = enemies.filter(enemy => !enemy.delete)
-    this.bullets = bullets.filter((bullet) => !bullet.delete)
+    this.bullets = bullets.filter(bullet => !bullet.delete)
+    this.particles = particles.filter(particle => !particle.delete)
 
     for (let bullet of this.bullets) {
       bullet.render(timeElasped)
@@ -202,6 +226,10 @@ class Game {
 
     for (let enemy of this.enemies) {
       enemy.render(timeElasped)
+    }
+
+    for (let particle of this.particles) {
+      particle.render(timeElasped)
     }
 
     context.restore()
