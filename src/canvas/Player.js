@@ -11,29 +11,30 @@ class Player {
     this.speed = 0
   }
 
-  updatePosition(mousePos) {
-  
+  updatePosition(mousePos, timeElasped) {
+    const { MAX_SPEED_COEFFICIENT } = GAME_VALUES
     const distanceFromMouse = calculateDistance(this.pos, mousePos)
     const angle = calculateAngle(this.pos, mousePos)
 
     let distance = 0
+
     if (distanceFromMouse > GAME_VALUES.DISTANCE_FROM_CURSOR) {
-      distance = distanceFromMouse * GAME_VALUES.MAX_SPEED_COEFFICIENT + GAME_VALUES.MAX_SPEED_CONSTANT
+      distance = timeElasped * MAX_SPEED_COEFFICIENT * distanceFromMouse
       this.pos = calculateNewPositionWithAngle(this.pos, angle, distance)
     }
 
     this.angle = angle
-    this.speed = distance
+    this.speed = distance/timeElasped
   }
 
   destroy() {
     this.delete = true
   }
 
-  render(mousePos) {
+  render(...args) {
     const { context, pos, angle } = this
 
-    this.updatePosition(mousePos)
+    this.updatePosition(...args)
     context.save()
     context.translate(pos.x, pos.y)
     context.rotate(angle + (90*Math.PI)/180)

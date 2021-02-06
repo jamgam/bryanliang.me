@@ -9,7 +9,7 @@ const App = () => {
 
   const [pos, setPos] = useState(-60)
   // TODO: default isPlayingGame back to false
-  const [isPlayingGame, setIsPlayingGame] = useState(false)
+  const [isPlayingGame, setIsPlayingGame] = useState(true)
   const [count, setCount] = useState(0)
   const [canvasContext, setCanvasContext] = useState(null)
   const [mousePos, setMousePos] = useState({x: 0, y: 0})

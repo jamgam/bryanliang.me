@@ -18,20 +18,20 @@ class Enemy {
     this.delete = true
   }
 
-  updatePosition() {
+  updatePosition(timeElasped) {
     const { pos, angle, speed, width, height } = this
 
     if (isOutOfBounds(pos, width, height, 50)) {
-      const newPos = calculateNewPositionWithAngle(pos, angle, speed)
+      const newPos = calculateNewPositionWithAngle(pos, angle, speed * timeElasped)
       this.pos = newPos
     } else {
       this.destroy()
     }
   }
 
-  render() {
+  render(timeElasped) {
     const { context, pos, size } = this
-    this.updatePosition() 
+    this.updatePosition(timeElasped) 
     context.save()
     context.beginPath()
     context.translate(pos.x, pos.y)

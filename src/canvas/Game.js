@@ -18,11 +18,12 @@ class Game {
     this.mousePosition = mousePos
     this.player = null
     this.bullets = []
+    this.lastEnemySpawned = Date.now()
     this.enemies = []
     this.spawnRate = ENEMY_SPAWN_RATE
-    this.lastEnemySpawned = 0
     this.isShooting = false
     this.lastShot = 0
+    this.lastFrame = Date.now()
   }
 
   resize({ width, height }) {
@@ -31,9 +32,9 @@ class Game {
   }
 
   start() {
-    const { enemies, context, width, height } = this
+    const { enemies, context, width, height, lastFrame } = this
     this.isInGame = true
-    this.player = new Player({ context })
+    this.player = new Player({ context, lastFrame })
     
     // TODO: remove test code
     this.generateNewEnemies()
@@ -102,8 +103,8 @@ class Game {
   }
 
   update() { 
-    const { player, enemies, spawnRate } = this
-    const { MAX_SPAWN_RATE } = GAME_VALUES
+    const { player, enemies, spawnRate, lastFrame } = this
+    const { MAX_SPAWN_RATE, FRAME_RATE } = GAME_VALUES
 
     if (this.isShooting) {
       this.shoot()
@@ -115,6 +116,8 @@ class Game {
     this.checkCollisions()
     this.generateNewEnemies()
     this.render()
+
+    this.lastFrame = Date.now()
     requestAnimationFrame(() => {this.update()})
   }
 
@@ -126,31 +129,29 @@ class Game {
       bullets, 
       player, 
       enemies, 
-      mousePosition
-     } = this
+      mousePosition,
+      lastFrame
+    } = this
     
+    const timeElasped = Date.now() - lastFrame
+
     context.save()
 
     // fill background
     context.fillStyle = colors.darkGrey
     context.fillRect(0, 0, width, height)
 
-    // context.fillStyle = '#000';
-    // context.globalAlpha = 0.7;
-    // context.fillRect(0, 0, width, height);
-    // context.globalAlpha = 1;
-
-    player.render(mousePosition)
+    player.render(mousePosition, timeElasped)
   
     this.enemies = enemies.filter(enemy => !enemy.delete)
     this.bullets = bullets.filter((bullet) => !bullet.delete)
 
     for (let bullet of this.bullets) {
-      bullet.render()
+      bullet.render(timeElasped)
     }
 
     for (let enemy of this.enemies) {
-      enemy.render()
+      enemy.render(timeElasped)
     }
 
 
