@@ -37,6 +37,8 @@ class Game {
     this.lastFrame = null
     this.score = 0
     this.framesRendered = 0
+    this.speedModifier = 0
+    this.speedIncremented = false
   }
 
   resize({ width, height }) {
@@ -74,9 +76,11 @@ class Game {
   }
 
   generateNewEnemies() {
-    const { player, enemies, context, width, height, lastEnemySpawned, spawnRate } = this
+    const { player, enemies, context, width, height, lastEnemySpawned, spawnRate, speedModifier } = this
 
     const { ENEMY_MAX_SIZE, INITIAL_MAX_ENEMY } = GAME_VALUES
+
+    this.speedModifier += .000005
 
     if (Date.now() - lastEnemySpawned > spawnRate && enemies.length < INITIAL_MAX_ENEMY ) {
       const spawnLocations = [
@@ -87,7 +91,7 @@ class Game {
       ]
   
       for (let e of spawnLocations) {
-        enemies.push(new Enemy({ context, width, height, pos: e, target: player.pos}))
+        enemies.push(new Enemy({ context, width, height, pos: e, target: player.pos, speedModifier}))
       }
       this.lastEnemySpawned = Date.now()
     }
@@ -120,6 +124,12 @@ class Game {
     let start = Date.now()
     const { bullets, enemies, player } = this
     for(let enemy of enemies) {
+      const dist = calculateDistance(player.pos, enemy.pos) 
+      if (dist < enemy.size + 6) {
+        // TODO: LOSE
+        this.endGame()
+        return false
+      }
       for(let bullet of bullets) {
         const dist = calculateDistance(bullet.pos, enemy.pos) 
         if (dist < enemy.size) {
@@ -129,12 +139,6 @@ class Game {
           bullet.destroy()
           enemy.destroy()
         }
-      }
-      const dist = calculateDistance(player.pos, enemy.pos) 
-      if (dist < enemy.size + 6) {
-        // TODO: LOSE
-        this.endGame()
-        return false
       }
     }
     return true
@@ -153,8 +157,10 @@ class Game {
     }
 
     if (this.spawnRate > MAX_SPAWN_RATE) {
-      this.spawnRate = spawnRate - (spawnRate/1000)
+      this.spawnRate = spawnRate - (spawnRate/2000)
     }
+
+    
 
     this.checkCollisions()
     this.generateNewEnemies()
@@ -180,6 +186,7 @@ class Game {
     if (this.framesRendered % 15 === 0) {
       this.setFps(1000/timeElasped)
     }
+
     context.save()
 
     // fill background

@@ -3,14 +3,14 @@ import { GAME_VALUES, colors } from '/src/constants'
 import { calculateNewPositionWithAngle, calculateAngle, isOutOfBounds } from '/src/helpers'
 
 class Enemy {
-  constructor({context, width, height, pos, target}) {
+  constructor({context, width, height, pos, target, speedModifier}) {
     const { ENEMY_MIN_SIZE, ENEMY_MAX_SIZE, ENEMY_MIN_SPEED, ENEMY_MAX_SPEED, ENEMY_TARGET_OFFSET } = GAME_VALUES
     this.context = context
     this.width = width
     this.height = height
     this.pos = pos
     this.size = randomInt(ENEMY_MIN_SIZE, ENEMY_MAX_SIZE)
-    this.speed = randomInt(ENEMY_MIN_SPEED, ENEMY_MAX_SPEED)
+    this.speed = randomInt(ENEMY_MIN_SPEED * 100, ENEMY_MAX_SPEED * 100)/100 + speedModifier
     this.angle = calculateAngle(pos, {x: target.x + randomInt(-ENEMY_TARGET_OFFSET, ENEMY_TARGET_OFFSET), y: target.y + randomInt(-ENEMY_TARGET_OFFSET, ENEMY_TARGET_OFFSET)})
   }
 
