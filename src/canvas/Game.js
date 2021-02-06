@@ -80,8 +80,6 @@ class Game {
 
     const { ENEMY_MAX_SIZE, INITIAL_MAX_ENEMY } = GAME_VALUES
 
-    this.speedModifier += .000005
-
     if (Date.now() - lastEnemySpawned > spawnRate && enemies.length < INITIAL_MAX_ENEMY ) {
       const spawnLocations = [
         {x: randomInt(0, width), y: -ENEMY_MAX_SIZE},
