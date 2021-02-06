@@ -37,7 +37,7 @@ class Enemy {
     context.translate(pos.x, pos.y)
     context.strokeStyle = colors.red
     context.arc(0, 0, size, 0, 2 * Math.PI)
-    context.lineWidth = 2
+    context.lineWidth = 3
     context.stroke()
     context.restore()
   }

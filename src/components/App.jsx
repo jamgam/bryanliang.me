@@ -4,6 +4,7 @@ import { colors } from '/src/constants'
 import Text from '/src/components/Text'
 import NavBar from '/src/components/NavBar'
 import GameCanvas from '/src/components/GameCanvas'
+import BasicButton from '/src/components/BasicButton'
 
 const App = () => {
 
@@ -53,11 +54,12 @@ const App = () => {
           <Text color={colors.red} font={1.3}>Gamer</Text>
         </AnimationContainerX>
         <AnimationContainerX speed={1.4} position={pos}>
-          <GameButton 
+          <BasicButton 
             onClick={handleButtonClick}
+            style={{marginTop: '1.7em'}}
           >
-            <Text color={'white'} font={1}>I wanna play a GAME! (WIP)</Text>
-          </GameButton>
+            <Text color={'white'} font={1}>I wanna play a GAME!</Text>
+          </BasicButton>
         </AnimationContainerX>
       </TextContainer>
   )
@@ -80,22 +82,6 @@ const App = () => {
 const AppContainer = styled.div`
   background-color: ${colors.darkGrey};
   height: 100%;
-`
-
-const GameButton = styled.button`
-  display: inline-block;
-  &:hover {
-    border-width: 3px;
-    cursor: pointer;
-  }
-  border-radius: 7px;
-  padding: .4em 1em;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1.7em;
-  border: solid black;
-  border-width: 2px;
-  background-color: ${colors.red};
 `
 
 const TextContainer = styled.div`

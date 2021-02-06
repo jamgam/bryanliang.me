@@ -6,11 +6,20 @@ import { randomInt, calculateDistance } from '/src/helpers'
 
 // TODO: replace numbers with constants
 class Game {
-  constructor({ width, height, context, mousePos }) {
+  constructor({ 
+    width, 
+    height, 
+    context, 
+    mousePos, 
+    handleGameEnd, 
+    setScore 
+  }) {
     const { ENEMY_SPAWN_RATE } = GAME_VALUES
     window.addEventListener('mousemove',  this.handleMouseMove.bind(this))
     window.addEventListener('mousedown', this.handleMouseDown.bind(this))
     window.addEventListener('mouseup', this.handleMouseUp.bind(this))
+    this.handleGameEnd = handleGameEnd
+    this.setScore = setScore
     this.isInGame = false
     this.width = width
     this.height = height
@@ -23,7 +32,8 @@ class Game {
     this.spawnRate = ENEMY_SPAWN_RATE
     this.isShooting = false
     this.lastShot = 0
-    this.lastFrame = Date.now()
+    this.lastFrame = null
+    this.score = 0
   }
 
   resize({ width, height }) {
@@ -34,11 +44,38 @@ class Game {
   start() {
     const { enemies, context, width, height, lastFrame } = this
     this.isInGame = true
+    this.resetScore()
     this.player = new Player({ context, lastFrame })
     
     // TODO: remove test code
-    this.generateNewEnemies()
+    this.lastFrame = Date.now()
     this.update()
+  }
+
+  resetScore() {
+    this.score = 0
+    this.setScore(0)
+  }
+
+  incrementScore() {
+    this.score++
+    this.setScore(this.score)
+  }
+
+  endGame() {
+
+    const { ENEMY_SPAWN_RATE } = GAME_VALUES
+
+    this.handleGameEnd()
+
+    this.isInGame = false
+    this.bullets = []
+    this.lastEnemySpawned = Date.now()
+    this.enemies = []
+    this.spawnRate = ENEMY_SPAWN_RATE
+    this.isShooting = false
+    this.lastShot = 0
+    this.lastFrame = null
   }
 
   generateNewEnemies() {
@@ -85,11 +122,15 @@ class Game {
   }
 
   checkCollisions() {
+    let start = Date.now()
     const { bullets, enemies, player } = this
     for(let enemy of enemies) {
       for(let bullet of bullets) {
         const dist = calculateDistance(bullet.pos, enemy.pos) 
         if (dist < enemy.size) {
+          if (!bullet.delete && !enemy.delete) {
+            this.incrementScore()
+          }
           bullet.destroy()
           enemy.destroy()
         }
@@ -97,13 +138,19 @@ class Game {
       const dist = calculateDistance(player.pos, enemy.pos) 
       if (dist < enemy.size + 8) {
         // TODO: LOSE
-        enemy.destroy()
+        this.endGame()
+        return false
       }
     }
+    return true
   }
 
   update() { 
-    const { player, enemies, spawnRate, lastFrame } = this
+    if(!this.isInGame) {
+      return
+    }
+
+    const { player, enemies, spawnRate, lastFrame, isInGame } = this
     const { MAX_SPAWN_RATE, FRAME_RATE } = GAME_VALUES
 
     if (this.isShooting) {
@@ -113,15 +160,18 @@ class Game {
     if (this.spawnRate > MAX_SPAWN_RATE) {
       this.spawnRate = spawnRate - (spawnRate/1000)
     }
+
     this.checkCollisions()
     this.generateNewEnemies()
     this.render()
-
     this.lastFrame = Date.now()
     requestAnimationFrame(() => {this.update()})
   }
 
   render() {
+    if (!this.isInGame) {
+      return
+    }
     const { 
       width, 
       height, 
@@ -153,7 +203,6 @@ class Game {
     for (let enemy of this.enemies) {
       enemy.render(timeElasped)
     }
-
 
     context.restore()
   }
