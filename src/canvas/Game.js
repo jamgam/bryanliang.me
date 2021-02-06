@@ -46,7 +46,7 @@ class Game {
     this.isInGame = true
     this.resetScore()
     this.player = new Player({ context, lastFrame })
-    
+    this.mousePosition = {x: window.innerWidth/2, y: window.innerHeight/2}
     // TODO: remove test code
     this.lastFrame = Date.now()
     this.update()
