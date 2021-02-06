@@ -5,29 +5,34 @@ export default class Particle {
     this.velocity = args.velocity
     this.radius = args.size;
     this.lifeSpan = args.lifeSpan;
-    this.inertia = 0.98;
+    this.inertia = .98;
   }
 
   destroy(){
     this.delete = true;
   }
-  
-  render(){
+
+  updatePosition(timeElasped){
     // Move
-    this.pos.x += this.velocity.x
-    this.pos.y += this.velocity.y
-    this.velocity.x *= this.inertia
-    this.velocity.y *= this.inertia
+    this.pos.x += this.velocity.x * timeElasped 
+    this.pos.y += this.velocity.y * timeElasped
+    this.velocity.x *= this.inertia 
+    this.velocity.y *= this.inertia 
 
     // Shrink
-    this.radius -= 0.1
+    this.radius -= 0.006 * timeElasped
     if(this.radius < 0.1) {
       this.radius = 0.1
     }
-    if(this.lifeSpan-- < 0){
+
+
+    if((this.lifeSpan -= timeElasped) < 0){
       this.destroy()
     }
-
+  }
+  
+  render(timeElasped){
+    this.updatePosition(timeElasped)
     // Draw
     const { context } = this
     context.save()
