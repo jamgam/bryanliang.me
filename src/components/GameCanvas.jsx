@@ -4,6 +4,9 @@ import { colors } from '/src/constants'
 import Game from '/src/canvas/Game'
 
 const GameCanvas = (props) => {
+
+  const { mousePos } = props
+
   const canvasRef = useRef(null)
   const [canvasContext, setCanvasContext] = useState(null)
 
@@ -19,7 +22,7 @@ const GameCanvas = (props) => {
     window.addEventListener('resize',  handleResize)
 
     const context = canvasRef?.current?.getContext('2d')
-    const newGame = new Game({ context, ...windowSize })
+    const newGame = new Game({ context, ...windowSize, mousePos })
 
     setGame(newGame)
     newGame.start()

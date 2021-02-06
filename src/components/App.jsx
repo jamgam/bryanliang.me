@@ -9,15 +9,18 @@ const App = () => {
 
   const [pos, setPos] = useState(-60)
   // TODO: default isPlayingGame back to false
-  const [isPlayingGame, setIsPlayingGame] = useState(true)
+  const [isPlayingGame, setIsPlayingGame] = useState(false)
   const [count, setCount] = useState(0)
   const [canvasContext, setCanvasContext] = useState(null)
+  const [mousePos, setMousePos] = useState({x: 0, y: 0})
 
   const canvasRef = useRef(null)
 
-  const handleButtonClick = useCallback((eveent) => {
+  const handleButtonClick = useCallback((e) => {
     // setIsPlayingGame(true)
     setPos(-50)
+    setMousePos({x: e.clientX, y: e.clientY})
+    console.warn(e)
   }, [])
 
   useEffect(() => {
@@ -54,7 +57,7 @@ const App = () => {
           <GameButton 
             onClick={handleButtonClick}
           >
-            <Text color={'white'} font={1}>I wanna shoot some stuff! (WIP)</Text>
+            <Text color={'white'} font={1}>I wanna play a GAME! (WIP)</Text>
           </GameButton>
         </AnimationContainerX>
       </TextContainer>
@@ -68,9 +71,9 @@ const App = () => {
 
   return (
     <AppContainer>
-      {isPlayingGame || renderNavbar()}
-      {isPlayingGame || renderText()}
-      {!isPlayingGame || <GameCanvas isPlayingGame={isPlayingGame} />}
+      {!isPlayingGame && renderNavbar()}
+      {!isPlayingGame && renderText()}
+      {isPlayingGame && <GameCanvas mousePos={mousePos} isPlayingGame={isPlayingGame} />}
     </AppContainer>
   )
 }

@@ -1,5 +1,5 @@
 import { GAME_VALUES } from '/src/constants'
-import { calculateNewPosition } from '/src/helpers'
+import { calculateNewPositionWithAngle, isOutOfBounds} from '/src/helpers'
 
 class Bullet {
   constructor({ player, width, height }) {
@@ -22,9 +22,9 @@ class Bullet {
     const { speed, pos, width, height, angle } = this
 
     // destroy bullets that are out of bounds
-    if (pos.x < width && pos.y < height && pos.x > 0 && pos.y > 0) {
+    if (isOutOfBounds(pos, width, height)) {
       const bulletSpeed = GAME_VALUES.BASE_BULLET_SPEED + speed
-      this.pos = calculateNewPosition(pos, angle, bulletSpeed)
+      this.pos = calculateNewPositionWithAngle(pos, angle, bulletSpeed)
     } else {
       this.destroy()
     }
