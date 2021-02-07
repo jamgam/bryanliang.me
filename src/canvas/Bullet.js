@@ -1,5 +1,5 @@
 import { GAME_VALUES } from '/src/constants'
-import { calculateNewPositionWithAngle, isOutOfBounds} from '/src/helpers'
+import { calculateNewPositionWithAngle, isOutOfBounds} from '/src/helpers/calculations'
 
 class Bullet {
   constructor({ player, width, height, lastFrame }) {

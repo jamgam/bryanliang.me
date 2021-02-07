@@ -1,4 +1,4 @@
-import { calculateNewPositionWithAngle, calculateVelocityFromAngle, randomInt, randomNum } from '/src/helpers'
+import { calculateNewPositionWithAngle, calculateVelocityFromAngle, randomInt, randomNum } from '/src/helpers/calculations'
 
 export default class Particle {
   constructor({ size, pos, context, speed, angle }) {
