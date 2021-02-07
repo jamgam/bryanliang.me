@@ -40,16 +40,19 @@ class Game {
     this.framesRendered = 0
     this.speedModifier = 0
     this.speedIncremented = false
+    this.enemiesPerSpawn = 0
     this.particles = []
   }
 
   resize({ width, height }) {
     this.height = height
     this.width = width
+    this.enemiesPerSpawn = Math.round((width*height) * 0.0000025)
   }
 
   start() {
     const { enemies, context, width, height, lastFrame } = this
+    this.enemiesPerSpawn = Math.round((width*height) * 0.0000025)
     this.isInGame = true
     this.resetScore()
     this.player = new Player({ context, lastFrame })
@@ -80,21 +83,26 @@ class Game {
   generateNewEnemies() {
     const { player, enemies, context, width, height, lastEnemySpawned, spawnRate, speedModifier } = this
 
-    const { ENEMY_MAX_SIZE, INITIAL_MAX_ENEMY } = GAME_VALUES
-
+    const { INITIAL_MAX_ENEMY } = GAME_VALUES
     if (Date.now() - lastEnemySpawned > spawnRate && enemies.length < INITIAL_MAX_ENEMY ) {
-      const spawnLocations = [
-        {x: randomInt(0, width), y: -ENEMY_MAX_SIZE},
-        {x: width + ENEMY_MAX_SIZE, y: randomInt(0, height)}, 
-        {x: randomInt(0, width), y: height + ENEMY_MAX_SIZE}, 
-        {x: -ENEMY_MAX_SIZE, y: randomInt(0, height)}, 
-      ]
-  
-      for (let e of spawnLocations) {
-        enemies.push(new Enemy({ context, width, height, pos: e, target: player.pos, speedModifier}))
+
+      for (let i = 0; i < this.enemiesPerSpawn; i++) {
+        enemies.push(new Enemy({ context, width, height, pos: this.generateRandomSpawn(), target: player.pos, speedModifier}))
       }
       this.lastEnemySpawned = Date.now()
     }
+  }
+
+  generateRandomSpawn() {
+    const { width, height } = this
+    const { ENEMY_MAX_SIZE } = GAME_VALUES
+    const spawnLocations = [
+      {x: randomInt(0, width), y: -ENEMY_MAX_SIZE},
+      {x: width + ENEMY_MAX_SIZE, y: randomInt(0, height)}, 
+      {x: randomInt(0, width), y: height + ENEMY_MAX_SIZE}, 
+      {x: -ENEMY_MAX_SIZE, y: randomInt(0, height)}, 
+    ]
+    return spawnLocations[randomInt(0, 4)]
   }
 
   handleMouseMove({ offsetX, offsetY}) {

@@ -16,8 +16,8 @@ export default class Particle {
     this.inertia = .98;
 
     const additionalVel = calculateVelocityFromAngle(speed, angle)
-    this.velocity.x += additionalVel.x/1.1
-    this.velocity.y += additionalVel.y/1.1
+    this.velocity.x += additionalVel.x/1.2
+    this.velocity.y += additionalVel.y/1.2
   }
 
   destroy(){
