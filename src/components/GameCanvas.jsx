@@ -53,7 +53,7 @@ const GameCanvas = (props) => {
       handleGameEnd,
       setScore,
       setFps,
-      ...windowSize, 
+      ...windowSize,
     })
     newGame.start()
     setGame(newGame)
@@ -61,11 +61,14 @@ const GameCanvas = (props) => {
 
   const renderEndGamePrompt = () => (
     <EndGamePrompt>
-      <Text font={1}>
-        Unlucky! You Lost
+      <Text font={1.5}>
+        Game!
+      </Text>
+      <Text font={1.5}>
+        {`Your score was: ${score}`}
       </Text>
       <RestartButton onClick={handleOnButtonClick}>
-        <Text color={'white'} font={1}>
+        <Text color={colors.lightBlue} font={1.5}>
           Try Again?
         </Text>
       </RestartButton>
@@ -74,26 +77,17 @@ const GameCanvas = (props) => {
 
   const renderScoreCounter = () => (
     <Score>
-      <Text font={1.5}>
-        {`Score: ${score} | `}
-      </Text>
-        <Text font={1.5}>
-        {`FPS: ${Math.floor(fps)}`}
-      </Text>
+      <ScoreText font={1.5}>
+        {`Score: ${score} | FPS: ${Math.floor(fps)}`}
+      </ScoreText>
     </Score>
-  )
-
-  const renderFrameRate = () => (
-    <Text>
-      {`FPS: ${fps}`}
-    </Text>
   )
 
   return (
     <> 
       {renderScoreCounter()}
-      {renderFrameRate()}
       {!isInGame && renderEndGamePrompt()}
+      {/* {renderEndGamePrompt()} */}
       <Canvas 
         ref={canvasRef} 
         width={windowSize.width}
@@ -103,7 +97,11 @@ const GameCanvas = (props) => {
   )
 }
 
+const ScoreText = styled(Text)`
+`
+
 const Score = styled.div`
+  padding: 1em;
   z-index: 1;
   position: absolute;
   top: 0;
@@ -112,19 +110,25 @@ const Score = styled.div`
 
 const RestartButton = styled(BasicButton)`
   margin-top: 1em;
+  border-color: ${colors.lightBlue};
 `
 
 const EndGamePrompt = styled.div`
   border-radius: 7px;
+  border-width: 2px;
+  border-color: ${colors.blue};
+  border-style: line;
   position: absolute;
   display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
   padding: 1em;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
-  background-color: rgba(255, 255, 255, .2)
+  background-color: transparent;
 `
 
 const Canvas = styled.canvas`

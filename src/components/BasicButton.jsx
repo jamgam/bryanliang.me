@@ -14,7 +14,7 @@ const GameButton = styled.button`
   box-sizing: border-box;
   display: inline-block;
   &:hover {
-    border-width: 3px;
+    border-width: 4px;
     cursor: pointer;
   }
   border-radius: 7px;
@@ -23,7 +23,7 @@ const GameButton = styled.button`
   justify-content: center;
   border: solid black;
   border-width: 2px;
-  background-color: ${colors.red};
+  background-color: transparent;
   ${props => props.css || ''}
 `
 

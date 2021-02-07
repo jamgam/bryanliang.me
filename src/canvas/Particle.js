@@ -15,7 +15,7 @@ export default class Particle {
     this.lifeSpan = randomNum(1000, 1666);
     this.inertia = .98;
 
-    const additionalVel = calculateVelocityFromAngle(speed, angle)
+    const additionalVel = calculateVelocityFromAngle(speed, angle) || 0
     this.velocity.x += additionalVel.x/1.2
     this.velocity.y += additionalVel.y/1.2
   }

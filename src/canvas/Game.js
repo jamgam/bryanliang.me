@@ -67,19 +67,22 @@ class Game {
   }
 
   incrementScore() {
+    if(!this.isInGame) return
     this.score++
     this.setScore(this.score)
   }
 
   endGame() {
-
     const { ENEMY_SPAWN_RATE } = GAME_VALUES
     this.handleGameEnd()
     this.isInGame = false
-
   }
 
   generateNewEnemies() {
+    if (!this.isInGame) {
+      return
+    }
+
     const { player, enemies, context, width, height, lastEnemySpawned, spawnRate, speedModifier } = this
 
     const { INITIAL_MAX_ENEMY } = GAME_VALUES
@@ -146,9 +149,12 @@ class Game {
     for(let enemy of enemies) {
       const dist = calculateDistance(player.pos, enemy.pos) 
       if (dist < enemy.size + 6) {
-        // TODO: LOSE
-        this.endGame()
-        return false
+        if (!player.delete) {
+          this.createExplosion({pos: player.pos, size: 60})
+          this.createExplosion(enemy)
+          player.destroy()
+          this.endGame()
+        }
       }
       for(let bullet of bullets) {
         const dist = calculateDistance(bullet.pos, enemy.pos) 
@@ -162,26 +168,19 @@ class Game {
         }
       }
     }
-    return true
   }
 
-  update() { 
-    if(!this.isInGame) {
-      return
-    }
-
+  update() {
     const { player, enemies, spawnRate, lastFrame, isInGame } = this
     const { MAX_SPAWN_RATE, FRAME_RATE } = GAME_VALUES
 
-    if (this.isShooting) {
+    if (this.isShooting && isInGame) {
       this.shoot()
     }
 
     if (this.spawnRate > MAX_SPAWN_RATE) {
       this.spawnRate = spawnRate - (spawnRate/2000)
     }
-
-    
 
     this.checkCollisions()
     this.generateNewEnemies()
@@ -215,7 +214,9 @@ class Game {
     context.fillStyle = colors.darkGrey
     context.fillRect(0, 0, width, height)
 
-    player.render(mousePosition, timeElasped)
+    if (!player.delete) {
+      player.render(mousePosition, timeElasped)
+    }
   
     this.enemies = enemies.filter(enemy => !enemy.delete)
     this.bullets = bullets.filter(bullet => !bullet.delete)
