@@ -5,7 +5,7 @@ import Particle from '/src/canvas/Particle'
 import { GAME_VALUES, colors } from '/src/constants'
 import { randomInt, calculateDistance, randomNum } from '/src/helpers'
 
-// TODO: replace numbers with constants
+
 class Game {
   constructor({ 
     width, 
@@ -41,6 +41,7 @@ class Game {
     this.speedIncremented = false
     this.enemiesPerSpawn = 0
     this.particles = []
+    this.gameStartTime = null
   }
 
   resize({ width, height }) {
@@ -56,8 +57,8 @@ class Game {
     this.resetScore()
     this.player = new Player({ context, lastFrame })
     this.mousePosition = {x: window.innerWidth/2, y: window.innerHeight/2}
-    // TODO: remove test code
     this.lastFrame = Date.now()
+    this.gameStartTime = Date.now()
     this.update()
   }
 
@@ -74,7 +75,7 @@ class Game {
 
   endGame() {
     const { ENEMY_SPAWN_RATE } = GAME_VALUES
-    this.handleGameEnd()
+    this.handleGameEnd({time: Date.now() - this.gameStartTime})
     this.isInGame = false
   }
 

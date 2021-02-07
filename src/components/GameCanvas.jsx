@@ -18,14 +18,16 @@ const GameCanvas = (props) => {
   const [game, setGame] = useState(null)
   const [isInGame, setIsInGame] = useState(true)
   const [score, setScore] = useState(0)
+  const [time, setTime] = useState(0)
   const [fps, setFps] = useState(0)
 
   const handleResize = useCallback(() => {
     setWindowSize({height: window.innerHeight, width: window.innerWidth})
   }, [])
 
-  const handleGameEnd = () => {
+  const handleGameEnd = ({time}) => {
     setIsInGame(false)
+    setTime((time/1000).toFixed(2))
   }
 
   const handleOnButtonClick = () => {
@@ -65,7 +67,10 @@ const GameCanvas = (props) => {
         Game!
       </Text>
       <Text font={1.5}>
-        {`Your score was: ${score}`}
+        {`You scored:`} <Text font={2}>{score}</Text>
+      </Text>
+      <Text font={1.5}>
+        {`in ${time} seconds`}
       </Text>
       <RestartButton onClick={handleOnButtonClick}>
         <Text color={colors.lightBlue} font={1.5}>
