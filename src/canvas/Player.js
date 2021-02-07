@@ -1,5 +1,5 @@
 import { GAME_VALUES, colors } from '/src/constants'
-import { calculateNewPositionWithAngle, calculateAngle, calculateDistance } from '/src/helpers'
+import { calculateNewPositionWithAngle, calculateAngle, calculateDistance } from '/src/helpers/calculations'
 
 class Player {
   constructor({ context }) {

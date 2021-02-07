@@ -1,6 +1,6 @@
-import { randomInt } from '/src/helpers'
+import { randomInt } from '/src/helpers/calculations'
 import { GAME_VALUES, colors } from '/src/constants'
-import { calculateNewPositionWithAngle, calculateAngle, isOutOfBounds } from '/src/helpers'
+import { calculateNewPositionWithAngle, calculateAngle, isOutOfBounds } from '/src/helpers/calculations'
 
 class Enemy {
   constructor({context, width, height, pos, target, speedModifier}) {

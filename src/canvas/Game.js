@@ -3,7 +3,7 @@ import Bullet from '/src/canvas/Bullet'
 import Enemy from '/src/canvas/Enemy'
 import Particle from '/src/canvas/Particle'
 import { GAME_VALUES, colors } from '/src/constants'
-import { randomInt, calculateDistance, randomNum } from '/src/helpers'
+import { randomInt, calculateDistance, randomNum } from '/src/helpers/calculations'
 
 
 class Game {
@@ -42,6 +42,7 @@ class Game {
     this.enemiesPerSpawn = 0
     this.particles = []
     this.gameStartTime = null
+    this.spawnInterval = null
   }
 
   resize({ width, height }) {
@@ -52,6 +53,7 @@ class Game {
 
   start() {
     const { enemies, context, width, height, lastFrame } = this
+    const { ENEMY_SPAWN_RATE, MAX_SPAWN_RATE } = GAME_VALUES
     this.enemiesPerSpawn = Math.round((width*height) * 0.0000025)
     this.isInGame = true
     this.resetScore()
@@ -59,6 +61,14 @@ class Game {
     this.mousePosition = {x: window.innerWidth/2, y: window.innerHeight/2}
     this.lastFrame = Date.now()
     this.gameStartTime = Date.now()
+
+    this.spawnInterval = setInterval(() => {
+      this.spawnRate -= (ENEMY_SPAWN_RATE - MAX_SPAWN_RATE)/40
+      if (this.spawnRate <= MAX_SPAWN_RATE) {
+        clearInterval(this.spawnInterval)
+      }
+    }, 1000)
+
     this.update()
   }
 
@@ -88,7 +98,6 @@ class Game {
 
     const { INITIAL_MAX_ENEMY } = GAME_VALUES
     if (Date.now() - lastEnemySpawned > spawnRate && enemies.length < INITIAL_MAX_ENEMY ) {
-
       for (let i = 0; i < this.enemiesPerSpawn; i++) {
         enemies.push(new Enemy({ context, width, height, pos: this.generateRandomSpawn(), target: player.pos, speedModifier}))
       }
@@ -177,10 +186,6 @@ class Game {
 
     if (this.isShooting && isInGame) {
       this.shoot()
-    }
-
-    if (this.spawnRate > MAX_SPAWN_RATE) {
-      this.spawnRate = spawnRate - (spawnRate/2000)
     }
 
     this.checkCollisions()
