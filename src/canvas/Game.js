@@ -19,9 +19,6 @@ class Game {
     const { ENEMY_SPAWN_RATE } = GAME_VALUES
     window.addEventListener('mousemove',  this.handleMouseMove.bind(this))
 
-    // no longer need click listeners (player will now autofire)
-    // window.addEventListener('mousedown', this.handleMouseDown.bind(this))
-    // window.addEventListener('mouseup', this.handleMouseUp.bind(this))
     this.handleGameEnd = handleGameEnd
     this.setScore = setScore
     this.setFps = setFps
