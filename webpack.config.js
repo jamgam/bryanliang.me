@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
   entry: './src/index.jsx',
@@ -7,7 +8,6 @@ module.exports = {
       filename: 'main.js'
   },
   resolve: {
-    // enforceModuleExtension: false,
     extensions: ['.js', '.jsx']
   },
   module: {
@@ -28,9 +28,12 @@ module.exports = {
         options: {
           name: '/images/[name].[ext]'
         }
-    }
+      }
     ]
   },
+  plugins: [
+    new webpack.DefinePlugin({ JWT_SECRET: JSON.stringify(process.env.JWT_SECRET) })
+  ],
   devServer: {
     contentBase: path.join(__dirname, '/public'), 
     watchContentBase: true, 

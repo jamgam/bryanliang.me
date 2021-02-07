@@ -63,6 +63,7 @@ const GameCanvas = (props) => {
 
   const renderEndGamePrompt = () => (
     <EndGamePrompt>
+      
       <Text font={1.5}>
         Game!
       </Text>
