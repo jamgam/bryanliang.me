@@ -91,12 +91,12 @@ const AppContainer = styled.div`
 const NavContainer = styled.div`
   width: 100%;
   position: absolute;
-  z-index: 10;
+  z-index: 1;
 `
 
 const TextContainer = styled.div`
   position: absolute;
-  z-index: 10;
+  z-index: 1;
   padding-top: 15rem;
   padding-left: 10rem;
   background-color: rgba(0, 0, 0, 0);

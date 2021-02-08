@@ -100,7 +100,7 @@ const GameCanvas = (props) => {
 
 
   const renderEndGamePrompt = () => (
-    <EndGamePrompt
+  <EndGamePrompt
       isShown={isPlayingGame}
       score={score} 
       duration={duration} 
