@@ -29,6 +29,11 @@ const EndGamePrompt = ({isShown, handleAboutMeClick, score, duration, restartGam
     rank && submitUsername(false)
   } 
 
+  const handleAboutMe = () => {
+    handleAboutMeClick()
+    rank && submitUsername(false)
+  } 
+
   const init = async () => {
     const scores = await getScores()
     getRank(scores)
@@ -96,7 +101,7 @@ const EndGamePrompt = ({isShown, handleAboutMeClick, score, duration, restartGam
           AGAIN!
         </Text>
       </RestartButton>
-      <AboutMeButton onClick={handleAboutMeClick}>
+      <AboutMeButton onClick={handleAboutMe}>
         <Text color={colors.lightBlue} font={.7}>
           About Me
         </Text>

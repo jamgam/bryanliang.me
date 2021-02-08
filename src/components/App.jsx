@@ -20,7 +20,6 @@ const App = () => {
   const handleAboutMeClick = (e) => {
     setIsPlayingGame(false)
     AnimateIn()
-    setMousePos({x: e.clientX, y: e.clientY})
   }
 
   const AnimateOut = (cb) => {
