@@ -9,7 +9,6 @@ import BasicButton from '/src/components/BasicButton'
 const App = () => {
 
   const [pos, setPos] = useState(-60)
-  // TODO: default isPlayingGame back to false
   const [isPlayingGame, setIsPlayingGame] = useState(true)
   const [count, setCount] = useState(0)
   const [canvasContext, setCanvasContext] = useState(null)
@@ -35,6 +34,7 @@ const App = () => {
     }
   }, [pos])
 
+  // TODO: move to about an page
   const renderText = () => (
     <TextContainer>
         <AnimationContainerX speed={.8} position={pos}>
@@ -69,7 +69,8 @@ const App = () => {
       <NavBar />
     </AnimationContainerY>
   )
-
+  
+  // only renders game atm
   return (
     <AppContainer>
       {!isPlayingGame && renderNavbar()}
