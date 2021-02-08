@@ -17,8 +17,7 @@ const GameButton = styled.button`
     border-width: 4px;
     cursor: pointer;
   }
-  border-radius: 7px;
-  padding: .4em 1em;
+  padding: .4rem 1rem;
   align-items: center;
   justify-content: center;
   border: solid black;

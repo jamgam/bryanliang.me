@@ -4,6 +4,10 @@ import { colors } from '/src/constants'
 import Game from '/src/canvas/Game'
 import Text from '/src/components/Text'
 import BasicButton from '/src/components/BasicButton'
+import { uploadScore, getHighScores } from '/src/helpers/requests'
+
+import EndGamePrompt from '/src/components/EndGamePrompt'
+
 
 const GameCanvas = (props) => {
 
@@ -18,26 +22,25 @@ const GameCanvas = (props) => {
   const [game, setGame] = useState(null)
   const [isInGame, setIsInGame] = useState(true)
   const [score, setScore] = useState(0)
-  const [time, setTime] = useState(0)
+  const [duration, setDuration] = useState(0)
   const [fps, setFps] = useState(0)
 
   const handleResize = useCallback(() => {
     setWindowSize({height: window.innerHeight, width: window.innerWidth})
   }, [])
 
-  const handleGameEnd = ({time}) => {
+  const handleGameEnd = ({score, time}) => {
     setIsInGame(false)
-    setTime((time/1000).toFixed(2))
+    const secondsTwoDecimals = (time/1000).toFixed(2)
+    setDuration(secondsTwoDecimals)
   }
-
-  const handleOnButtonClick = () => {
+  
+  const restartGame = () => {
     startGame(canvasContext)
   }
 
   useEffect(() => {
-
     window.addEventListener('resize',  handleResize)
-    
     const context = canvasRef?.current?.getContext('2d', { alpha: false })
     setCanvasContext(context)
     startGame(context)
@@ -61,39 +64,22 @@ const GameCanvas = (props) => {
     setGame(newGame)
   }
 
-  const renderEndGamePrompt = () => (
-    <EndGamePrompt>
-      
-      <Text font={1.5}>
-        Game!
-      </Text>
-      <Text font={1.5}>
-        {`You scored:`} <Text font={2}>{score}</Text>
-      </Text>
-      <Text font={1.5}>
-        {`in ${time} seconds`}
-      </Text>
-      <RestartButton onClick={handleOnButtonClick}>
-        <Text color={colors.lightBlue} font={1.5}>
-          Try Again?
-        </Text>
-      </RestartButton>
-    </EndGamePrompt>
-  )
-
   const renderScoreCounter = () => (
     <Score>
-      <ScoreText font={1.5}>
+      <Text font={1.3}>
         {`Score: ${score} | FPS: ${Math.floor(fps)}`}
-      </ScoreText>
+      </Text>
     </Score>
+  )
+
+  const renderEndGamePrompt = () => (
+    <EndGamePrompt score={score} duration={duration} restartGame={restartGame} />
   )
 
   return (
     <> 
       {renderScoreCounter()}
       {!isInGame && renderEndGamePrompt()}
-      {/* {renderEndGamePrompt()} */}
       <Canvas 
         ref={canvasRef} 
         width={windowSize.width}
@@ -103,38 +89,12 @@ const GameCanvas = (props) => {
   )
 }
 
-const ScoreText = styled(Text)`
-`
-
 const Score = styled.div`
   padding: 1em;
   z-index: 1;
   position: absolute;
   top: 0;
   left: 0;
-`
-
-const RestartButton = styled(BasicButton)`
-  margin-top: 1em;
-  border-color: ${colors.lightBlue};
-`
-
-const EndGamePrompt = styled.div`
-  border-radius: 7px;
-  border-width: 2px;
-  border-color: ${colors.blue};
-  border-style: line;
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 1em;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-  background-color: transparent;
 `
 
 const Canvas = styled.canvas`

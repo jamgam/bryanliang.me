@@ -85,7 +85,7 @@ class Game {
 
   endGame() {
     const { ENEMY_SPAWN_RATE } = GAME_VALUES
-    this.handleGameEnd({time: Date.now() - this.gameStartTime})
+    this.handleGameEnd({time: Date.now() - this.gameStartTime, score: this.score})
     this.isInGame = false
   }
 

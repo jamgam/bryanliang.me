@@ -22,7 +22,7 @@ const NavBar = () => {
 }
 
 const Container = styled.div`
-  padding: 1.2em;
+  padding: 1.2rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -34,7 +34,7 @@ const IconContainter = styled.div`
 `
 
 const Icon = styled.img`
-  margin-left: 4em;
+  margin-left: 4rem;
   align-self: center;
   height: 2rem;
   width: 2rem;

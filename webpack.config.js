@@ -8,7 +8,7 @@ module.exports = {
       filename: 'main.js'
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
   },
   module: {
     rules: [
@@ -32,7 +32,9 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({ JWT_SECRET: JSON.stringify(process.env.JWT_SECRET) })
+    new webpack.EnvironmentPlugin({
+      SECRET_KEY: null
+    })
   ],
   devServer: {
     contentBase: path.join(__dirname, '/public'), 
