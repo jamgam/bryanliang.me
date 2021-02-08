@@ -1,27 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Text from '/src/components/Text'
-import { colors } from '/src/constants'
+import { colors, GAME_VALUES } from '/src/constants'
 import { updateUsername } from '/src/helpers/requests'
 
-const Leaderboard = ({ isEditingUsername, submitUsername, highscores = [], rank }) => {
-
-  const [text, setText] = useState('')
+const Leaderboard = ({ text, setText, isEditingUsername, submitUsername, highscores = [], rank }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    submitUsername(text)
+    submitUsername()
   }
 
   const handleChange = (e) => {
-    if ((e.target.value).length <= 10) {
+    if ((e.target.value).length <= 12) {
       setText(e.target.value)
     }
   }
 
   const renderInputField = () => (
     <form onSubmit={handleSubmit}>
-      <UsernameInput value={text} onChange={handleChange} autoFocus={true} placeholder={'ANON'} type={'text'} />
+      <UsernameInput value={text} onChange={handleChange} autoFocus={true} placeholder={GAME_VALUES.USERNAME_PLACEHOLDER} type={'text'} />
     </form>
   )
 

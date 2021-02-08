@@ -1,4 +1,6 @@
 import hash from 'object-hash'
+import { GAME_VALUES } from '../constants'
+import { GAME_VAULES } from '/src/constants'
 
 const graphQl = async (type, query) => {
   const url = window.location.protocol + "//" + window.location.host
@@ -15,7 +17,7 @@ const graphQl = async (type, query) => {
   return response.json()
 }
 
-export const uploadScore = async ({score, duration, username = 'ANON'}) => {
+export const uploadScore = async ({score, duration, username = GAME_VALUES.USERNAME_PLACEHOLDER}) => {
   const type = 'mutation'
   const query = `
     {

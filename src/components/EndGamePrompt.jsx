@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
 import Leaderboard from '/src/components/Leaderboard'
 import { colors } from '/src/constants'
@@ -9,9 +9,11 @@ import { getHighscores, uploadScore, updateUsername } from '/src/helpers/request
 
 const EndGamePrompt = ({score, duration, restartGame}) => {
 
+  const ref = useRef(null)
   const [highscores, setHighscores] = useState([])
   const [rank, setRank] = useState(null)
   const [isEditingUsername, setIsEditingUsername] = useState(false)
+  const [text, setText] = useState('')
 
   useEffect(() => {
     init()
@@ -23,6 +25,11 @@ const EndGamePrompt = ({score, duration, restartGame}) => {
     }
   }, [rank])
 
+  const handleOnClick = () => {
+    restartGame()
+    submitUsername()
+  } 
+
   const init = async () => {
     const scores = await getScores()
     getRank(scores)
@@ -32,7 +39,7 @@ const EndGamePrompt = ({score, duration, restartGame}) => {
     const resp = await getHighscores()
     const scores = resp?.data?.highscores || []
 
-    setHighscores(scores)
+    ref && setHighscores(scores)
     return scores
   }
 
@@ -52,8 +59,8 @@ const EndGamePrompt = ({score, duration, restartGame}) => {
     getScores()
   }
 
-  const submitUsername = (username) => {
-    updateUsername({id: highscores[rank-1].id, username})
+  const submitUsername = () => {
+    text && updateUsername({id: highscores[rank-1].id, username: text})
     setIsEditingUsername(false)
     getScores()
   } 
@@ -67,9 +74,11 @@ const EndGamePrompt = ({score, duration, restartGame}) => {
   )
 
   return (
-    <PromptContainer>
+    <PromptContainer ref={ref}>
       {rank !== null && renderHighscore()}
       <Leaderboard 
+        text={text}
+        setText={setText}
         submitUsername={submitUsername} 
         isEditingUsername={isEditingUsername} 
         highscores={highscores} 
@@ -81,7 +90,7 @@ const EndGamePrompt = ({score, duration, restartGame}) => {
       <Text font={1.3}>
         {`in ${duration} seconds`}
       </Text>
-      <RestartButton onClick={restartGame}>
+      <RestartButton onClick={handleOnClick}>
         <Text color={colors.lightBlue} font={1.3}>
           AGAIN!
         </Text>

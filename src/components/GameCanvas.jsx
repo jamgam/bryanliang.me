@@ -5,7 +5,6 @@ import Text from '/src/components/Text'
 
 import EndGamePrompt from '/src/components/EndGamePrompt'
 
-
 const GameCanvas = (props) => {
 
   const { mousePos } = props
