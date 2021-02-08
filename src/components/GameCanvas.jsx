@@ -19,6 +19,7 @@ const GameCanvas = (props) => {
   const [game, setGame] = useState(null)
   const [isInGame, setIsInGame] = useState(true)
   const [score, setScore] = useState(0)
+  const [shells, setShells] = useState(0)
   const [duration, setDuration] = useState(0)
   const [fps, setFps] = useState(0)
 
@@ -47,6 +48,10 @@ const GameCanvas = (props) => {
     game?.resize(windowSize)
   }, [windowSize])
 
+  useEffect(() => {
+
+  }, [game])
+
   const startGame = (context) => {
     setIsInGame(true)
     const newGame = new Game({ 
@@ -55,6 +60,7 @@ const GameCanvas = (props) => {
       handleGameEnd,
       setScore,
       setFps,
+      setShells,
       ...windowSize,
     })
     newGame.start()
@@ -69,12 +75,32 @@ const GameCanvas = (props) => {
     </Score>
   )
 
+  const renderShotgunCounter = () => {
+
+    let shellsGraphic = []
+    for(let i = 0; i < shells; i++) {
+      shellsGraphic.push(<Shell key={i} />)
+    }
+
+    return (
+      <Shells>
+        <ShellsContainer>
+          {shellsGraphic}
+        </ShellsContainer>
+        <Text font={.5}>( left click )</Text> 
+      </Shells>
+    )
+    
+  } 
+
+
   const renderEndGamePrompt = () => (
     <EndGamePrompt score={score} duration={duration} restartGame={restartGame} />
   )
 
   return (
     <> 
+      {renderShotgunCounter()}
       {renderScoreCounter()}
       {!isInGame && renderEndGamePrompt()}
       <Canvas 
@@ -86,9 +112,35 @@ const GameCanvas = (props) => {
   )
 }
 
-const Score = styled.div`
-  padding: 1em;
+const ShellsContainer = styled.div`
+  width: 20rem; 
+  display: flex;
+`
+
+const Shell = styled.div`
+  margin: .5rem .5rem;
+  background-color: yellow;
+  height: 3rem;
+  width: 1rem;
+`
+
+const Shells = styled.div`
+  flex-direction: column;
+  display: flex;
+  padding: 1rem;
   z-index: 1;
+  position: fixed;
+  bottom: 0;
+  pointer-events: none;
+  transform: translate(-50%, -0%);
+  left: 50%;
+  align-items: center;
+  justify-content: center;
+`
+
+const Score = styled.div`
+  padding: 1rem;
+  z-index: 2;
   position: absolute;
   top: 0;
   left: 0;

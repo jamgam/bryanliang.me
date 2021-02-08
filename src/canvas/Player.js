@@ -31,10 +31,10 @@ class Player {
     this.delete = true
   }
 
-  render(...args) {
+  render({shotgunCharges, mousePosition, timeElasped,}) {
     const { context, pos, angle } = this
 
-    this.updatePosition(...args)
+    this.updatePosition(mousePosition, timeElasped)
     context.save()
     context.translate(pos.x, pos.y)
     context.rotate(angle + (90*Math.PI)/180)

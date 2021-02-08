@@ -15,13 +15,16 @@ class Game {
     handleGameEnd, 
     setScore,
     setFps,
+    setShells,
   }) {
     const { ENEMY_SPAWN_RATE } = GAME_VALUES
     window.addEventListener('mousemove',  this.handleMouseMove.bind(this))
+    window.addEventListener('mousedown',  this.handleMouseDown.bind(this))
 
     this.handleGameEnd = handleGameEnd
     this.setScore = setScore
     this.setFps = setFps
+    this.setShells = setShells
     this.isInGame = false
     this.width = width
     this.height = height
@@ -43,6 +46,8 @@ class Game {
     this.particles = []
     this.gameStartTime = null
     this.spawnInterval = null
+    this.shotgunInterval = null
+    this.shotgunCharges = 0
   }
 
   resize({ width, height }) {
@@ -69,12 +74,21 @@ class Game {
       }
     }, 1000)
 
+    this.shotgunInterval = setInterval(() => {
+      if (this.shotgunCharges < 10) {
+        this.shotgunCharges++
+      }
+      this.setShells(this.shotgunCharges)
+    }, 1500)
+
     this.update()
   }
 
   resetScore() {
     this.score = 0
+    this.shotgunCharges = 0
     this.setScore(0)
+    
   }
 
   incrementScore() {
@@ -85,6 +99,9 @@ class Game {
 
   endGame() {
     const { ENEMY_SPAWN_RATE } = GAME_VALUES
+    clearInterval(this.spawnInterval)
+    clearInterval(this.shotgunInterval)
+    this.setShells(0)
     this.handleGameEnd({time: Date.now() - this.gameStartTime, score: this.score})
     this.isInGame = false
   }
@@ -122,9 +139,9 @@ class Game {
   }
 
   handleMouseDown() {
-    this.isShooting = true
-    const { context, player, width, height } = this
-    this.bullets.push(new Bullet({player, width, height}))
+    if (this.shotgunCharges > 0 && this.isInGame) {
+      this.shotgun()
+    }
   }
 
   handleMouseUp() {
@@ -138,6 +155,15 @@ class Game {
       this.bullets.push(new Bullet({player, width, height}))
       this.lastShot = Date.now()
     }
+  }
+
+  shotgun() {
+    const { player, width, height } = this
+    this.createExplosion({size: 10, pos: player.pos, speed: 1, angle: player.angle})
+    for(let i = 0; i < 15; i++) {
+      this.bullets.push(new Bullet({player, width, height, shotgun: true}))
+    }
+    this.setShells(--this.shotgunCharges)
   }
 
   createExplosion({size, pos, speed, angle}) {
@@ -164,6 +190,7 @@ class Game {
           this.createExplosion(enemy)
           player.destroy()
           this.endGame()
+          break;
         }
       }
       for(let bullet of bullets) {
@@ -175,6 +202,7 @@ class Game {
           }
           bullet.destroy()
           enemy.destroy()
+          break;
         }
       }
     }
@@ -207,6 +235,7 @@ class Game {
       particles,
       mousePosition,
       lastFrame,
+      shotgunCharges,
     } = this
     
     const timeElasped = Date.now() - lastFrame
@@ -221,7 +250,7 @@ class Game {
     context.fillRect(0, 0, width, height)
 
     if (!player.delete) {
-      player.render(mousePosition, timeElasped)
+      player.render({mousePosition, timeElasped, shotgunCharges})
     }
   
     this.enemies = enemies.filter(enemy => !enemy.delete)

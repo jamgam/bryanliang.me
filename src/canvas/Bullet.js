@@ -1,17 +1,18 @@
 import { GAME_VALUES } from '/src/constants'
-import { calculateNewPositionWithAngle, isOutOfBounds} from '/src/helpers/calculations'
+import { calculateNewPositionWithAngle, isOutOfBounds, randomNum } from '/src/helpers/calculations'
 
 class Bullet {
-  constructor({ player, width, height, lastFrame }) {
+  constructor({ player, width, height, lastFrame, shotgun = false}) {
     this.context = player.context
     this.player = player
     this.pos = {
       x: player.pos.x, 
       y: player.pos.y}
-    this.angle = player.angle
+    this.angle = player.angle + (shotgun ? randomNum(-.3, .3) : 0)
     this.width = width
     this.height = height
-    this.speed = player.speed + GAME_VALUES.BASE_BULLET_SPEED
+    this.speed = player.speed + GAME_VALUES.BASE_BULLET_SPEED + (shotgun ? randomNum(0, .4) : 0)
+    this.shotgun = shotgun
   }
 
   destroy() {
@@ -32,14 +33,14 @@ class Bullet {
 
   render(timeElasped) {
     
-    const { context, pos, angle } = this
+    const { shotgun, context, pos, angle } = this
     
     this.updateBulletPosition(timeElasped)
 
     context.save()
     context.translate(pos.x, pos.y)
     context.rotate(angle * Math.PI / 180)
-    context.fillStyle = '#FFF'
+    context.fillStyle = shotgun ? 'yellow': '#FFF'
     context.lineWidth = 0,5
     context.beginPath()
     context.arc(0, 0, 2, 0, 2 * Math.PI)

@@ -13,7 +13,7 @@ export default class Particle {
     }
     this.size = randomNum(1, 3)
     this.lifeSpan = randomNum(1000, 1666)
-    this.inertia = .98
+    this.inertia = .99
 
     const additionalVel = calculateVelocityFromAngle(speed, angle) || 0
     this.velocity.x += additionalVel.x/1.2
