@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Leaderboard from '/src/components/Leaderboard'
 import { colors } from '/src/constants'
-import BasicButton from '/src/components/BasicBUtton'
+import BasicButton from '/src/components/BasicButton'
 import Text from '/src/components/Text'
 import { getHighscores, uploadScore, updateUsername } from '/src/helpers/requests'
 

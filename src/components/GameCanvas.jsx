@@ -1,10 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { colors } from '/src/constants'
 import Game from '/src/canvas/Game'
 import Text from '/src/components/Text'
-import BasicButton from '/src/components/BasicButton'
-import { uploadScore, getHighScores } from '/src/helpers/requests'
 
 import EndGamePrompt from '/src/components/EndGamePrompt'
 
