@@ -168,7 +168,9 @@ class Game {
   }
 
   createExplosion({size, pos, speed, angle}) {
-    for (let i = 0; i < size; i++) {
+    let totalObjects = (this.bullets.length + this.enemies.length + this.particles.length)
+    totalObjects = totalObjects <= 150 ? 150 : totalObjects
+    for (let i = 0; i < size/(totalObjects/150); i++) {
       const particle = new Particle({
         pos,
         context: this.context,
@@ -190,19 +192,17 @@ class Game {
           this.createExplosion(enemy)
           player.destroy()
           this.endGame()
-          break;
         }
       }
       for(let bullet of bullets) {
-        const dist = calculateDistance(bullet.pos, enemy.pos) 
-        if (dist < enemy.size) {
-          if (!bullet.delete && !enemy.delete) {
+        if (!bullet.delete && !enemy.delete) {
+          const dist = calculateDistance(bullet.pos, enemy.pos) 
+          if (dist < enemy.size) {
             this.createExplosion(enemy)
             this.incrementScore()
+            bullet.destroy()
+            enemy.destroy()
           }
-          bullet.destroy()
-          enemy.destroy()
-          break;
         }
       }
     }
