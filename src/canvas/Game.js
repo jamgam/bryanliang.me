@@ -47,7 +47,7 @@ class Game {
     this.gameStartTime = null
     this.spawnInterval = null
     this.shotgunInterval = null
-    this.shotgunCharges = 0
+    this.shotgunCharges = 10
   }
 
   resize({ width, height }) {
@@ -86,9 +86,8 @@ class Game {
 
   resetScore() {
     this.score = 0
-    this.shotgunCharges = 0
+    this.setShells(10)
     this.setScore(0)
-    
   }
 
   incrementScore() {
@@ -102,6 +101,7 @@ class Game {
     clearInterval(this.spawnInterval)
     clearInterval(this.shotgunInterval)
     this.setShells(0)
+    this.shotgunCharges = 0
     this.handleGameEnd({time: Date.now() - this.gameStartTime, score: this.score})
     this.isInGame = false
   }

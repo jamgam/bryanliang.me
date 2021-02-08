@@ -19,7 +19,7 @@ const GameCanvas = (props) => {
   const [game, setGame] = useState(null)
   const [isInGame, setIsInGame] = useState(true)
   const [score, setScore] = useState(0)
-  const [shells, setShells] = useState(0)
+  const [shells, setShells] = useState(10)
   const [duration, setDuration] = useState(0)
   const [fps, setFps] = useState(0)
 
