@@ -32,7 +32,7 @@ class Game {
     this.mousePosition = mousePos
     this.player = null
     this.bullets = []
-    this.lastEnemySpawned = Date.now()
+    this.lastEnemySpawned = performance.now()
     this.enemies = []
     this.spawnRate = ENEMY_SPAWN_RATE
     this.isShooting = true
@@ -64,7 +64,7 @@ class Game {
     this.resetScore()
     this.player = new Player({ context, lastFrame })
     this.mousePosition = {x: window.innerWidth/2, y: window.innerHeight/2}
-    this.lastFrame = Date.now()
+    this.lastFrame = performance.now()
     this.gameStartTime = Date.now()
 
     this.spawnInterval = setInterval(() => {
@@ -107,6 +107,7 @@ class Game {
   }
 
   generateNewEnemies() {
+
     if (!this.isInGame) {
       return
     }
@@ -114,11 +115,11 @@ class Game {
     const { player, enemies, context, width, height, lastEnemySpawned, spawnRate, speedModifier } = this
 
     const { INITIAL_MAX_ENEMY } = GAME_VALUES
-    if (Date.now() - lastEnemySpawned > spawnRate && enemies.length < INITIAL_MAX_ENEMY ) {
+    if (performance.now() - lastEnemySpawned > spawnRate && enemies.length < INITIAL_MAX_ENEMY ) {
       for (let i = 0; i < this.enemiesPerSpawn; i++) {
         enemies.push(new Enemy({ context, width, height, pos: this.generateRandomSpawn(), target: player.pos, speedModifier}))
       }
-      this.lastEnemySpawned = Date.now()
+      this.lastEnemySpawned = performance.now()
     }
   }
 
@@ -151,9 +152,9 @@ class Game {
   shoot() {
     const { FIRE_RATE } = GAME_VALUES
     const { player, width, height, lastShot } = this
-    if (Date.now() - lastShot > FIRE_RATE) {
+    if (performance.now() - lastShot > FIRE_RATE) {
       this.bullets.push(new Bullet({player, width, height}))
-      this.lastShot = Date.now()
+      this.lastShot = performance.now()
     }
   }
 
@@ -180,7 +181,6 @@ class Game {
   }
 
   checkCollisions() {
-    let start = Date.now()
     const { bullets, enemies, particles, player } = this
     for(let enemy of enemies) {
       const dist = calculateDistance(player.pos, enemy.pos) 
@@ -219,7 +219,6 @@ class Game {
     this.checkCollisions()
     this.generateNewEnemies()
     this.render()
-    this.lastFrame = Date.now()
     this.framesRendered++
     requestAnimationFrame(() => {this.update()})
   }
@@ -238,11 +237,12 @@ class Game {
       shotgunCharges,
     } = this
     
-    const timeElasped = Date.now() - lastFrame
-    if (this.framesRendered % 15 === 0) {
+    const timeElasped = performance.now() - lastFrame
+    this.lastFrame = performance.now()
+    this.framesRendered++
+    if(this.framesRendered % 25 === 0) {
       this.setFps(1000/timeElasped)
     }
-
     context.save()
 
     // fill background
@@ -270,7 +270,6 @@ class Game {
     }
 
     context.restore()
-    this.framesRendered++
   }
 }
 

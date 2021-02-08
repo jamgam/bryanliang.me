@@ -13,6 +13,7 @@ class Bullet {
     this.height = height
     this.speed = player.speed + GAME_VALUES.BASE_BULLET_SPEED + (shotgun ? randomNum(0, .4) : 0)
     this.shotgun = shotgun
+    this.inertia = .9995
   }
 
   destroy() {
@@ -23,12 +24,12 @@ class Bullet {
     const { speed, pos, width, height, angle } = this
     // destroy bullets that are out of bounds
     if (isOutOfBounds(pos, width, height)) {
-      const bulletSpeed = GAME_VALUES.BASE_BULLET_SPEED + speed
-      const distance = bulletSpeed * timeElasped
+      const distance = speed * timeElasped
       this.pos = calculateNewPositionWithAngle(pos, angle, distance)
     } else {
       this.destroy()
     }
+    this.speed *= (this.inertia ** (timeElasped/16.666666))
   }
 
   render(timeElasped) {
