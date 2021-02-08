@@ -9,7 +9,6 @@ import { getHighscores, uploadScore, updateUsername } from '/src/helpers/request
 
 const EndGamePrompt = ({score, duration, restartGame}) => {
 
-  const ref = useRef(null)
   const [highscores, setHighscores] = useState([])
   const [rank, setRank] = useState(null)
   const [isEditingUsername, setIsEditingUsername] = useState(false)
@@ -27,7 +26,7 @@ const EndGamePrompt = ({score, duration, restartGame}) => {
 
   const handleOnClick = () => {
     restartGame()
-    submitUsername()
+    rank && submitUsername(false)
   } 
 
   const init = async () => {
@@ -39,7 +38,7 @@ const EndGamePrompt = ({score, duration, restartGame}) => {
     const resp = await getHighscores()
     const scores = resp?.data?.highscores || []
 
-    ref && setHighscores(scores)
+    setHighscores(scores)
     return scores
   }
 
@@ -59,10 +58,12 @@ const EndGamePrompt = ({score, duration, restartGame}) => {
     getScores()
   }
 
-  const submitUsername = () => {
+  const submitUsername = (refresh = true) => {
     text && updateUsername({id: highscores[rank-1].id, username: text})
-    setIsEditingUsername(false)
-    getScores()
+    if (refresh) {
+      setIsEditingUsername(false)
+      getScores()
+    }
   } 
 
   const renderHighscore = () => (
@@ -74,7 +75,7 @@ const EndGamePrompt = ({score, duration, restartGame}) => {
   )
 
   return (
-    <PromptContainer ref={ref}>
+    <PromptContainer>
       {rank !== null && renderHighscore()}
       <Leaderboard 
         text={text}
