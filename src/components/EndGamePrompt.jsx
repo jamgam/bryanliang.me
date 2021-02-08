@@ -7,7 +7,7 @@ import Text from '/src/components/Text'
 import { getHighscores, uploadScore, updateUsername } from '/src/helpers/requests'
 
 
-const EndGamePrompt = ({score, duration, restartGame}) => {
+const EndGamePrompt = ({isShown, handleAboutMeClick, score, duration, restartGame}) => {
 
   const [highscores, setHighscores] = useState([])
   const [rank, setRank] = useState(null)
@@ -75,7 +75,7 @@ const EndGamePrompt = ({score, duration, restartGame}) => {
   )
 
   return (
-    <PromptContainer>
+    <PromptContainer isShown={isShown}>
       {rank !== null && renderHighscore()}
       <Leaderboard 
         text={text}
@@ -96,6 +96,11 @@ const EndGamePrompt = ({score, duration, restartGame}) => {
           AGAIN!
         </Text>
       </RestartButton>
+      <AboutMeButton onClick={handleAboutMeClick}>
+        <Text color={colors.lightBlue} font={.7}>
+          About Me
+        </Text>
+      </AboutMeButton>
     </PromptContainer>
   )
 }
@@ -114,7 +119,7 @@ const PromptContainer = styled.div`
   border-color: ${colors.blue};
   border-style: line;
   position: absolute;
-  display: flex;
+  display: ${props => props.isShown ? 'flex' : 'none'};
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -128,6 +133,13 @@ const PromptContainer = styled.div`
 
 const RestartButton = styled(BasicButton)`
   margin-top: 1rem;
+  border-color: ${colors.lightBlue};
+`
+
+const AboutMeButton = styled(BasicButton)`
+  border-radius: 1rem;
+  margin-top: 1rem;
+  padding: .2rem .5rem;
   border-color: ${colors.lightBlue};
 `
 

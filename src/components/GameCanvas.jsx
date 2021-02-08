@@ -7,7 +7,7 @@ import EndGamePrompt from '/src/components/EndGamePrompt'
 
 const GameCanvas = (props) => {
 
-  const { mousePos } = props
+  const { isPlayingGame, mousePos, handleAboutMeClick } = props
 
   const canvasRef = useRef(null)
   const [canvasContext, setCanvasContext] = useState(null)
@@ -16,7 +16,7 @@ const GameCanvas = (props) => {
     width: window.innerWidth,
   })
   const [game, setGame] = useState(null)
-  const [isInGame, setIsInGame] = useState(true)
+  const [isAlive, setIsAlive] = useState(true)
   const [score, setScore] = useState(0)
   const [shells, setShells] = useState(10)
   const [duration, setDuration] = useState(0)
@@ -27,7 +27,7 @@ const GameCanvas = (props) => {
   }, [])
 
   const handleGameEnd = ({score, time}) => {
-    setIsInGame(false)
+    setIsAlive(false)
     const secondsTwoDecimals = (time/1000).toFixed(2)
     setDuration(secondsTwoDecimals)
   }
@@ -38,9 +38,12 @@ const GameCanvas = (props) => {
 
   useEffect(() => {
     window.addEventListener('resize',  handleResize)
-    const context = canvasRef?.current?.getContext('2d', { alpha: false })
-    setCanvasContext(context)
-    startGame(context)
+
+    return () => {
+      window.removeEventListener('mousemove')
+      window.removeEventListener('mousedown')
+      window.addEventListener('resize')
+    }
   }, [])
 
   useEffect(() => {
@@ -48,11 +51,15 @@ const GameCanvas = (props) => {
   }, [windowSize])
 
   useEffect(() => {
-
-  }, [game])
+    if (isPlayingGame) {
+      const context = canvasRef?.current?.getContext('2d', { alpha: false })
+      setCanvasContext(context)
+      startGame(context)
+    }
+  }, [isPlayingGame])
 
   const startGame = (context) => {
-    setIsInGame(true)
+    setIsAlive(true)
     const newGame = new Game({ 
       context, 
       mousePos,
@@ -89,19 +96,24 @@ const GameCanvas = (props) => {
         <Text font={.5}>( left click )</Text> 
       </Shells>
     )
-    
   } 
 
 
   const renderEndGamePrompt = () => (
-    <EndGamePrompt score={score} duration={duration} restartGame={restartGame} />
+    <EndGamePrompt
+      isShown={isPlayingGame}
+      score={score} 
+      duration={duration} 
+      restartGame={restartGame}
+      handleAboutMeClick={handleAboutMeClick}
+    />
   )
 
   return (
     <> 
-      {renderShotgunCounter()}
-      {renderScoreCounter()}
-      {!isInGame && renderEndGamePrompt()}
+      {isPlayingGame && renderShotgunCounter()}
+      {isPlayingGame && renderScoreCounter()}
+      {!isAlive && renderEndGamePrompt()}
       <Canvas 
         ref={canvasRef} 
         width={windowSize.width}

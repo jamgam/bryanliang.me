@@ -8,74 +8,78 @@ import BasicButton from '/src/components/BasicButton'
 
 const App = () => {
 
-  const [pos, setPos] = useState(-60)
+  const [pos, setPos] = useState(-50)
   const [isPlayingGame, setIsPlayingGame] = useState(true)
-  const [count, setCount] = useState(0)
-  const [canvasContext, setCanvasContext] = useState(null)
   const [mousePos, setMousePos] = useState({x: 0, y: 0})
 
-  const canvasRef = useRef(null)
-
-  const handleButtonClick = useCallback((e) => {
-    // setIsPlayingGame(true)
-    setPos(-50)
+  const handleButtonClick = (e) => {
+    AnimateOut(() => {setIsPlayingGame(true)})
     setMousePos({x: e.clientX, y: e.clientY})
-  }, [])
+  }
 
-  useEffect(() => {
+  const handleAboutMeClick = (e) => {
+    setIsPlayingGame(false)
+    AnimateIn()
+    setMousePos({x: e.clientX, y: e.clientY})
+  }
+
+  const AnimateOut = (cb) => {
+    setPos(-50)
+    setTimeout(() => {
+      cb()
+    }, 700)
+  }
+
+  const AnimateIn = (cb) => {
     setPos(0)
-  }, [])
+  }
 
-  useEffect(() => {
-    if (pos === -50) {
-      setTimeout(() => {
-        setIsPlayingGame(true)
-      }, 800)
-    }
-  }, [pos])
-
-  // TODO: move to about an page
   const renderText = () => (
     <TextContainer>
         <AnimationContainerX speed={.8} position={pos}>
           <Text>Hello,</Text>
         </AnimationContainerX>
-        <AnimationContainerX speed={.95} position={pos}>
+        <AnimationContainerX speed={.9} position={pos}>
           <Text>I'm Bryan</Text>
         </AnimationContainerX>
-        <AnimationContainerX speed={1.1} position={pos}>
+        <AnimationContainerX speed={1} position={pos}>
           <Bar />
         </AnimationContainerX>
-        <AnimationContainerX speed={1.2} position={pos}>
+        <AnimationContainerX speed={1.1} position={pos}>
           <Bar marginLeft={3} />
         </AnimationContainerX>
-        <AnimationContainerX speed={1.3} position={pos}>
+        <AnimationContainerX speed={1.1} position={pos}>
           <Text font={1.5}>Software Engineer / </Text>
-          <Text color={colors.red} font={1.3}>Gamer</Text>
+          <Text color={colors.blue} font={1.3}>Gamer</Text>
         </AnimationContainerX>
-        <AnimationContainerX speed={1.4} position={pos}>
-          <BasicButton 
+        <AnimationContainerX speed={1.1} position={pos}>
+          <GameStartButton 
             onClick={handleButtonClick}
             style={{marginTop: '1.7em'}}
           >
-            <Text color={'white'} font={1}>I wanna play a GAME!</Text>
-          </BasicButton>
+            <Text color={colors.lightBlue} font={1}>Play</Text>
+          </GameStartButton>
         </AnimationContainerX>
       </TextContainer>
   )
 
   const renderNavbar = () => (
-    <AnimationContainerY speed={.9} position={pos}>
-      <NavBar />
-    </AnimationContainerY>
+    <NavContainer>
+      <AnimationContainerY speed={.8} position={pos}>
+        <NavBar />
+      </AnimationContainerY>
+    </NavContainer>
   )
   
-  // only renders game atm
   return (
     <AppContainer>
-      {!isPlayingGame && renderNavbar()}
-      {!isPlayingGame && renderText()}
-      {isPlayingGame && <GameCanvas mousePos={mousePos} isPlayingGame={isPlayingGame} />}
+      {renderNavbar()}
+      {renderText()}
+      {<GameCanvas 
+        mousePos={mousePos} 
+        isPlayingGame={isPlayingGame} 
+        handleAboutMeClick={handleAboutMeClick}
+      />}
     </AppContainer>
   )
 }
@@ -85,7 +89,14 @@ const AppContainer = styled.div`
   height: 100%;
 `
 
+const NavContainer = styled.div`
+  width: 100%;
+  position: absolute;
+  z-index: 10;
+`
+
 const TextContainer = styled.div`
+  position: absolute;
   z-index: 10;
   padding-top: 15rem;
   padding-left: 10rem;
@@ -109,6 +120,11 @@ const Bar = styled.div`
   height: 4px;
   width: 8rem;
   border-radius: 100px;
+`
+
+const GameStartButton = styled(BasicButton)`
+  margin-top: 1rem;
+  border-color: ${colors.lightBlue};
 `
 
 export default App
