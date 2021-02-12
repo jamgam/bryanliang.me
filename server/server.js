@@ -24,9 +24,11 @@ app.use('/', express.static('public'))
 
 app.use('/graphQl', (req, res, next) => {
   const { query, verificationHash } = req.body
-  if (verificationHash === hash({query, key: process.env.SECRET_KEY})) {
+  const correctHash = hash({query, key: process.env.SECRET_KEY})
+  if (verificationHash === correctHash) {
     next()
   } else {
+    console.warn('HASH MISMATCH', verificationHash, correctHash)
     res.sendStatus(401)
   }
 })
