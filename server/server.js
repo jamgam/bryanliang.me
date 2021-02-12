@@ -2,6 +2,7 @@ const express = require('express')
 const compression = require('compression')
 const hash = require('object-hash')
 const config = require('dotenv').config()
+const cors = require('cors')
 
 const graphql = require('graphql')
 const { graphqlHTTP } = require('express-graphql')
@@ -17,6 +18,7 @@ const schema = new GraphQLSchema({
 const app = express()
 const PORT = process.env.PORT || 3000
 
+app.use(cors())
 app.use(compression())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -24,6 +26,7 @@ app.use('/', express.static('public'))
 
 app.use('/graphQl', (req, res, next) => {
   const { query, verificationHash } = req.body
+  console.log(req.body)
   const correctHash = hash({query, key: process.env.SECRET_KEY})
   if (verificationHash === correctHash) {
     next()
